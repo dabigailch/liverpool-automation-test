@@ -1,6 +1,4 @@
-# Liverpool E2E Automation Challenge 🛒⚡
-
-![Playwright Tests](https://github.com/dabigailch/liverpool-automation-test/actions/workflows/test.yml/badge.svg)
+# Liverpool E2E Automation
 
 Proyecto de automatización de pruebas End-to-End (E2E) e interceptación de respuestas de red para el portal de Liverpool México, desarrollado con **Playwright** y **TypeScript**.
 
