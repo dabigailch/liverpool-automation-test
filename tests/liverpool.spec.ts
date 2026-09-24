@@ -64,7 +64,7 @@ test('Flujo E2E Liverpool - PlayStation 5 e Interceptación de Red', async ({ pa
     await page.waitForTimeout(3000);
   }
 
-  // 5. Extraer Nombres y Precios directamente del DOM
+  // 5. Extraer los primeros 5 productos de la UI
   await page.waitForSelector('a[href*="/pdp/"]', { timeout: 20000 });
 
   const uiResults = await page.evaluate(() => {
@@ -77,7 +77,7 @@ test('Flujo E2E Liverpool - PlayStation 5 e Interceptación de Red', async ({ pa
       const rawText = (link.textContent || '').trim();
       if (!rawText || rawText.length < 3) continue;
 
-      // Dividir el texto por saltos de línea o por el signo de pesos si viene junto
+      // Separar el texto en partes y limpiar espacios
       const parts = rawText.split('\n').map(p => p.trim()).filter(Boolean);
       const title = parts[0] || rawText;
 
@@ -102,7 +102,7 @@ test('Flujo E2E Liverpool - PlayStation 5 e Interceptación de Red', async ({ pa
 
   expect(uiResults.length).toBeGreaterThan(0);
 
-  // --- PARTE 2: Validación e Interceptación de Red ---
+  // --- PARTE 2: Validación cruzada entre UI y Red ---
   console.log('\n==================================================');
   console.log('--- 2. VALIDACIÓN CRUZADA (UI vs RED INTERCEPTADA) ---');
   console.log('==================================================');
@@ -126,4 +126,12 @@ test('Flujo E2E Liverpool - PlayStation 5 e Interceptación de Red', async ({ pa
 
   console.log(`\nCoincidencias encontradas entre UI y Red: ${matches}`);
   console.log('==================================================\n');
+
+  // Si se capturaron productos de la API, se espera al menos 3 coincidencias; de lo contrario, se aprueba la prueba por UI.
+  if (interceptedProducts.length > 0) {
+    expect(matches).toBeGreaterThanOrEqual(3);
+  } else {
+    console.log('Nota: No se capturaron llamadas de API en el ambiente headless, prueba aprobada por UI.');
+  }
+
 });
